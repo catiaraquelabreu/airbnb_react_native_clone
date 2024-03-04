@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     padding: Platform.OS === "ios" ? 14 : 12,
 
     alignItems: "center",
-    width: Platform.OS === "ios" ? 280 : 240,
+    width: 280,
 
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#c2c2c2",
