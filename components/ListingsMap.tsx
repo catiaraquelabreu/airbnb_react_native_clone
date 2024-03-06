@@ -2,9 +2,9 @@ import { View, Text } from "react-native";
 import React from "react";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { StyleSheet } from "react-native";
-import { defaultStyles } from "./constants/Styles";
+import { defaultStyles } from "../constants/Styles";
 import { Marker } from "react-native-maps";
-import { ListingGeo } from "./interfaces/listingGeo";
+import { ListingGeo } from "../interfaces/listingGeo";
 import { useRouter } from "expo-router";
 import MapView from "react-native-map-clustering";
 
@@ -26,6 +26,35 @@ const ListingsMap = ({ listings }: Props) => {
     router.push(`/listing/${item.properties.id}`);
   };
 
+  // how to create a custom cluster:
+  const renderCluster = (cluster: any) => {
+    const { id, geometry, onPress, properties } = cluster;
+    const points = properties.point_count;
+
+    return (
+      <Marker
+        key={`cluster-${id}`}
+        // to make on press on cluster work again, click and work
+        onPress={onPress}
+        coordinate={{
+          latitude: geometry.coordinates[1],
+          longitude: geometry.coordinates[0],
+        }}>
+        <View style={styles.marker}>
+          <Text
+            style={{
+              color: "#000",
+              textAlign: "center",
+              fontFamily: "mon-sb",
+              paddingHorizontal: 12,
+            }}>
+            {points}
+          </Text>
+        </View>
+      </Marker>
+    );
+  };
+
   return (
     <View style={defaultStyles.container}>
       <MapView
@@ -33,7 +62,11 @@ const ListingsMap = ({ listings }: Props) => {
         provider={PROVIDER_GOOGLE}
         showsUserLocation
         showsMyLocationButton
-        initialRegion={INITIAL_REGION}>
+        initialRegion={INITIAL_REGION}
+        clusterColor="#fff"
+        clusterTextColor="#000"
+        clusterFontFamily="mon-sb"
+        renderCluster={renderCluster}>
         {listings.features.map((item: ListingGeo) => (
           <Marker
             key={item.properties.id}
